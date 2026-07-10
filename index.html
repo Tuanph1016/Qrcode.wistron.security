@@ -314,13 +314,13 @@
     refreshBtn.onclick = refreshQR;
 
     // Giữ 2 giây trên khung QR để xem URL thật sự đang được mã hóa (debug)
-    let pressTimer = null;
+    /*let pressTimer = null;
     qrBox.addEventListener('touchstart', (e) => {
       pressTimer = setTimeout(() => {
         alert('URL trong QR:\n\n' + buildPayload(Date.now()));
       }, 2000);
     });
-    qrBox.addEventListener('touchend', () => clearTimeout(pressTimer));
+    qrBox.addEventListener('touchend', () => clearTimeout(pressTimer));*/
   }
 
   init();
