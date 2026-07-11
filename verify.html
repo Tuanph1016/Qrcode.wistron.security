@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Wistron Security</title>
+<meta name="theme-color" content="#24263a">
+<style>
+  :root{
+    --navy: #24263a;
+    --green: #22c55e;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{
+    height:100%;
+    background: var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    overflow:hidden;
+  }
+
+  /* Toàn bộ màn hình fade-out sau khi dấu tích hiện xong, tạo cảm giác
+     "xác nhận xong rồi biến mất" mượt mà, không giật cục. */
+  .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation: screenFadeOut 0.5s ease 2.2s forwards;
+  }
+  @keyframes screenFadeOut{
+    to{ opacity:0; }
+  }
+
+  /* ---- Circle check animation (giữ nguyên như bản gốc) ---- */
+  .check-ring{
+    width:120px; height:120px;
+    position:relative;
+  }
+  .check-ring svg{
+    width:100%; height:100%;
+    transform: rotate(-90deg);
+  }
+  .ring-bg{
+    fill:none;
+    stroke: rgba(34,197,94,0.15);
+    stroke-width:5;
+  }
+  .ring-fill{
+    fill:none;
+    stroke: var(--green);
+    stroke-width:5;
+    stroke-linecap:round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    animation: drawRing 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s forwards;
+  }
+  @keyframes drawRing{
+    to{ stroke-dashoffset: 0; }
+  }
+  .check-icon{
+    position:absolute;
+    inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .check-icon svg{
+    width:52px; height:52px;
+    transform:none;
+    opacity:0;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.75s forwards;
+  }
+  @keyframes popIn{
+    from{ opacity:0; transform:scale(0.4); }
+    to{ opacity:1; transform:scale(1); }
+  }
+  .check-icon path{
+    stroke: var(--green);
+    stroke-width:3.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    fill:none;
+    stroke-dasharray:40;
+    stroke-dashoffset:40;
+    animation: drawCheck 0.35s ease 1.1s forwards;
+  }
+  @keyframes drawCheck{
+    to{ stroke-dashoffset:0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Animated check ring -->
+  <div class="check-ring">
+    <svg viewBox="0 0 100 100">
+      <circle class="ring-bg" cx="50" cy="50" r="45"/>
+      <circle class="ring-fill" cx="50" cy="50" r="45"/>
+    </svg>
+    <div class="check-icon">
+      <svg viewBox="0 0 48 48">
+        <path d="M10 25 L20 35 L38 15"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Sau khi animation dấu tích hoàn tất và màn hình đã fade-out xong
+  // (2.2s bắt đầu fade + 0.5s fade-out = 2.7s), thử tự đóng tab/cửa sổ.
+  //
+  // LƯU Ý KỸ THUẬT: window.close() chỉ được trình duyệt cho phép khi
+  // tab này được mở bằng script (window.open) hoặc trong một số
+  // WebView/app quét QR coi đây là tab "độc lập" do chính nó mở ra.
+  // Nếu người dùng tự mở link này bằng cách gõ URL hoặc bấm từ lịch
+  // sử trình duyệt thông thường, trình duyệt sẽ ÂM THẦM từ chối đóng
+  // (không báo lỗi gì) — màn hình khi đó vẫn ở trạng thái trống,
+  // không hiện bất kỳ văn bản hay thông báo nào, đúng yêu cầu.
+  setTimeout(() => {
+    try {
+      window.close();
+    } catch(e) {
+      // Bỏ qua âm thầm, không hiển thị gì thêm.
+    }
+  }, 2700);
+</script>
+</body>
+</html>
